@@ -1,0 +1,68 @@
+import socket
+import random
+
+HEADER = 64
+PORT = 5000
+FORMAT = 'UTF-8'
+SERVER = socket.gethostname()
+ADDR = (SERVER, PORT)
+
+#serverName = socket.gethostname()
+#print("server's name: " + serverName)
+
+#serverr = socket.gethostbyname(socket.gethostname())
+#print("serverr " + serverr)
+
+serverInt = str(random.randint(1,100))
+SERVER_INTEGER = serverInt
+#print("server's integer" + serverInt)
+
+
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(ADDR)
+server.listen()
+
+print(f"[STARTING] The server is ready for connection!")
+
+
+def reply(msg):
+    message = msg.encode()
+    conn.send(message)
+
+
+while True:
+    conn, addr = server.accept()
+    print(f"[STATUS] The server is now connected to a client of address: {addr}")
+
+    clientName = conn.recv(HEADER).decode()
+    request = clientName.split()
+    clientName = request[0]
+
+    #clientName = conn.recv(HEADER).decode()
+
+    clientInt = request[1]
+    #clientInt = conn.recv(HEADER).decode()
+
+
+    if int(clientInt) < 1 or int(clientInt) > 100:
+        server.shutdown(socket.SHUT_RDWR)
+        server.close()
+
+    #print(" i am receiving" + clientName)
+    #clientInt = conn.recv(HEADER).decode()
+    #print("i received" + clientInt)
+
+    sum = int(SERVER_INTEGER) + int(clientInt)
+
+    reply(SERVER)
+    reply(SERVER_INTEGER)
+
+    print("client name: " + clientName)
+    print("server name: " + SERVER)
+    print("client integer: " + clientInt)
+    print("server integer: " + SERVER_INTEGER)
+    print("the sum of client and server integer: " + str(sum))
+
+
+
+
