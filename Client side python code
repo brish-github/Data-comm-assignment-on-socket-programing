@@ -1,0 +1,40 @@
+import socket
+
+HEADER = 64
+PORT = 5000
+FORMAT = 'UTF-8'
+
+SERVER = socket.gethostname()
+ADDR = (SERVER, PORT)
+
+clientInt = int(input("Enter an integer between 1 and 100: "))
+clientINT = str(clientInt)
+yourName = input("Enter your name: ")
+
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(ADDR)
+
+def request(msg):
+    message = msg.encode()
+    client.send(message)
+
+
+request(yourName+" ")
+request(clientINT)
+
+
+serverName = client.recv(HEADER).decode(FORMAT)
+#print(serverName)
+serverInt = client.recv(HEADER).decode(FORMAT)
+#print(serverInt)
+
+print(f"[CLIENT NAME] {yourName}")
+print(f"[SERVER NAME] {serverName}")
+print(f"[CLIENT INTEGER] {clientINT}")
+print(f"[SERVER INTEGER] {serverInt}")
+sum = clientInt + int(serverInt)
+print(f"[THE SUM OF YOUR AND SERVER INTEGER] {sum}")
+
+
+client.shutdown(socket.SHUT_RDWR)
+client.close()
